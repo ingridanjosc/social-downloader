@@ -3,49 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Social Media Downloader - Tudo em Um</title>
+
+    <title>Multi Downloader Pro</title>
+
     <style>
-        :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --text-color: #f8fafc;
-            --primary-color: #3b82f6;
-            --primary-hover: #2563eb;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: #030712;
+            color: #ffffff;
+            font-family: Arial, Helvetica, sans-serif;
         }
 
         .container {
-            background-color: var(--card-bg);
-            padding: 2.5rem;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
             width: 100%;
-            max-width: 550px;
+            max-width: 630px;
+            padding: 38px 40px;
             text-align: center;
-            margin: 20px;
+            background: #0b101b;
+            border: 1px solid #111827;
+            border-radius: 18px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
         }
 
         h1 {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(to right, #3b82f6, #8b5cf6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            margin-bottom: 14px;
+            font-size: 34px;
+            color: #4f46e5;
+            letter-spacing: 1px;
         }
 
-        p {
+        .subtitle {
+            margin-bottom: 30px;
             color: #94a3b8;
-            margin-bottom: 2rem;
+            font-size: 16px;
+            line-height: 1.5;
         }
 
         .input-group {
@@ -55,115 +56,259 @@
         }
 
         input {
-            padding: 14px;
-            border-radius: 8px;
-            border: 2px solid #334155;
-            background-color: #0f172a;
-            color: #fff;
-            font-size: 1rem;
+            width: 100%;
+            padding: 16px;
+            color: #ffffff;
+            background: #030712;
+            border: 1px solid #273244;
+            border-radius: 9px;
             outline: none;
+            font-size: 16px;
         }
 
-        button {
-            padding: 14px;
-            border-radius: 8px;
+        input:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.18);
+        }
+
+        button,
+        .download-btn {
+            width: 100%;
+            padding: 16px;
+            color: #ffffff;
+            background: #1d4ed8;
             border: none;
-            background-color: var(--primary-color);
-            color: white;
-            font-size: 1rem;
+            border-radius: 9px;
+            font-size: 16px;
             font-weight: bold;
             cursor: pointer;
+            transition: 0.2s;
         }
 
-        button:hover { background-color: var(--primary-hover); }
+        button:hover,
+        .download-btn:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        button:disabled {
+            cursor: wait;
+            opacity: 0.65;
+            transform: none;
+        }
 
         #result {
-            margin-top: 1.5rem;
             display: none;
+            margin-top: 25px;
+            padding-top: 22px;
+            border-top: 1px solid #1f2937;
         }
 
-        .download-btn {
-            background-color: #10b981;
-            display: inline-block;
-            text-decoration: none;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
+        .success-message {
+            margin-bottom: 16px;
+            color: #10b981;
             font-weight: bold;
-            margin: 5px;
         }
-        
-        .download-btn:hover { background-color: #059669; }
 
         .media-box {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 15px;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .download-btn {
+            display: block;
+            text-decoration: none;
+        }
+
+        .error-message {
+            display: none;
+            margin-top: 18px;
+            padding: 13px;
+            color: #fecaca;
+            background: rgba(220, 38, 38, 0.15);
+            border: 1px solid rgba(220, 38, 38, 0.4);
+            border-radius: 9px;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
         }
     </style>
 </head>
-<body>
 
-    <div class="container">
+<body>
+    <main class="container">
         <h1>Multi Downloader Pro</h1>
-        <p>Baixe Vídeos e Fotos do TikTok, Instagram, YouTube e Pinterest</p>
+
+        <p class="subtitle">
+            Baixe vídeos e fotos do TikTok, Instagram, YouTube e Pinterest
+        </p>
 
         <div class="input-group">
-            <input type="text" id="mediaUrl" placeholder="Cole o link aqui (Vídeo, Foto ou Carrossel)..." required>
-            <button id="btnAnalyse" onclick="processMedia()">Analisar Link</button>
+            <input
+                type="url"
+                id="mediaUrl"
+                placeholder="Cole o link aqui..."
+                required
+            >
+
+            <button id="btnAnalyse" type="button" onclick="processMedia()">
+                Analisar Link
+            </button>
         </div>
 
-        <div id="result">
-            <p style="color: #10b981; font-weight: bold;">✓ Mídia encontrada!</p>
+        <p id="errorMessage" class="error-message"></p>
+
+        <section id="result">
+            <p class="success-message">✓ Mídia encontrada!</p>
             <div id="downloadArea" class="media-box"></div>
-        </div>
-    </div>
+        </section>
+    </main>
 
     <script>
-        // Configurado diretamente com o seu link real obtido da Pipedream
-        const PIPEDREAM_URL = "https://pipedream.net";
+        const PIPEDREAM_URL =
+            "https://eo6sqe16yqjy32l.m.pipedream.net";
 
         async function processMedia() {
-            const urlInput = document.getElementById('mediaUrl').value.trim();
-            const btn = document.getElementById('btnAnalyse');
-            const resultDiv = document.getElementById('result');
-            const downloadArea = document.getElementById('downloadArea');
+            const input = document.getElementById("mediaUrl");
+            const button = document.getElementById("btnAnalyse");
+            const result = document.getElementById("result");
+            const downloadArea = document.getElementById("downloadArea");
+            const errorMessage = document.getElementById("errorMessage");
 
-            if (!urlInput) {
-                alert('Por favor, insira um link.');
+            const mediaUrl = input.value.trim();
+
+            result.style.display = "none";
+            errorMessage.style.display = "none";
+            errorMessage.textContent = "";
+            downloadArea.innerHTML = "";
+
+            if (!mediaUrl) {
+                showError("Cole o link de um vídeo ou imagem.");
                 return;
             }
 
-            btn.disabled = true;
-            btn.innerText = "Processando mídia...";
-            resultDiv.style.display = "none";
-            downloadArea.innerHTML = "";
+            try {
+                new URL(mediaUrl);
+            } catch {
+                showError("O endereço informado não parece ser um link válido.");
+                return;
+            }
+
+            button.disabled = true;
+            button.textContent = "Processando mídia...";
 
             try {
-                const response = await fetch(`${PIPEDREAM_URL}?url=${encodeURIComponent(urlInput)}`);
-                const data = await response.json();
-                
-                if (data && data.success) {
-                    if (data.type === "video") {
-                        downloadArea.innerHTML = `<a href="${data.downloadUrl}" target="_blank" class="download-btn">Baixar Vídeo MP4</a>`;
-                    } else if (data.type === "images" && data.urls.length > 0) {
-                        data.urls.forEach((imgUrl, index) => {
-                            downloadArea.innerHTML += `<a href="${imgUrl}" target="_blank" class="download-btn">Baixar Imagem ${index + 1}</a>`;
-                        });
+                const requestUrl =
+                    `${PIPEDREAM_URL}?url=${encodeURIComponent(mediaUrl)}`;
+
+                const response = await fetch(requestUrl, {
+                    method: "GET",
+                    headers: {
+                        Accept: "application/json"
                     }
-                    resultDiv.style.display = "block";
-                } else {
-                    alert("Erro ao extrair mídia. Verifique se o link está correto e público.");
+                });
+
+                const responseText = await response.text();
+
+                let data;
+
+                try {
+                    data = JSON.parse(responseText);
+                } catch {
+                    throw new Error(
+                        "O Pipedream não devolveu uma resposta válida."
+                    );
                 }
+
+                if (!response.ok) {
+                    throw new Error(
+                        data.message ||
+                        data.error ||
+                        "O Pipedream não conseguiu processar esse link."
+                    );
+                }
+
+                if (data.success && data.type === "video" && data.downloadUrl) {
+                    createDownloadButton(
+                        data.downloadUrl,
+                        "Baixar vídeo MP4"
+                    );
+
+                    result.style.display = "block";
+                    return;
+                }
+
+                if (
+                    data.success &&
+                    data.type === "images" &&
+                    Array.isArray(data.urls) &&
+                    data.urls.length > 0
+                ) {
+                    data.urls.forEach((imageUrl, index) => {
+                        createDownloadButton(
+                            imageUrl,
+                            `Baixar imagem ${index + 1}`
+                        );
+                    });
+
+                    result.style.display = "block";
+                    return;
+                }
+
+                throw new Error(
+                    data.message ||
+                    data.error ||
+                    "Não foi possível encontrar a mídia. Confira se o link é público."
+                );
             } catch (error) {
-                alert("Erro de comunicação com o motor global. Tente novamente.");
+                console.error("Erro no downloader:", error);
+
+                showError(
+                    error.message ||
+                    "Não foi possível se comunicar com o Pipedream."
+                );
             } finally {
-                btn.disabled = false;
-                btn.innerText = "Analisar Link";
+                button.disabled = false;
+                button.textContent = "Analisar Link";
             }
         }
+
+        function createDownloadButton(url, text) {
+            const downloadArea = document.getElementById("downloadArea");
+            const link = document.createElement("a");
+
+            link.href = url;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+            link.className = "download-btn";
+            link.textContent = text;
+
+            downloadArea.appendChild(link);
+        }
+
+        function showError(message) {
+            const errorMessage = document.getElementById("errorMessage");
+
+            errorMessage.textContent = message;
+            errorMessage.style.display = "block";
+        }
+
+        document
+            .getElementById("mediaUrl")
+            .addEventListener("keydown", function (event) {
+                if (event.key === "Enter") {
+                    processMedia();
+                }
+            });
     </script>
 </body>
 </html>
