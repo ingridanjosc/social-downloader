@@ -127,11 +127,8 @@
     </div>
 
     <script>
-        // Configurado com o seu link real da Vercel
-        const BACKEND_URL = "https://vercel.app";
-
         async function processVideo() {
-            const urlInput = document.getElementById('videoUrl').value;
+            const urlInput = document.getElementById('videoUrl').value.trim();
             const btn = document.getElementById('btnDownload');
             const resultDiv = document.getElementById('result');
 
@@ -145,20 +142,28 @@
             resultDiv.style.display = "none";
 
             try {
-                const response = await fetch(`${BACKEND_URL}?url=${encodeURIComponent(urlInput)}`);
+                // Utilizando uma API pública, gratuita e global de extração de mídias sociais
+                // Suporta TikTok, Instagram, Twitter, etc., sem precisar de backend próprio
+                const apiUrl = `https://corbpie.com{encodeURIComponent(urlInput)}`;
+                
+                const response = await fetch(apiUrl);
                 const data = await response.json();
                 
-                if (data.success) {
-                    document.getElementById('downloadLink').href = data.downloadUrl;
+                // Se a API encontrar o vídeo limpo
+                if (data && data.url) {
+                    document.getElementById('downloadLink').href = data.url;
                     resultDiv.style.display = "block";
-                } else { 
-                    // Se a requisição direta falhar, tenta a estratégia de contingência abrindo uma nova aba
-                    window.open(`${BACKEND_URL}?url=${encodeURIComponent(urlInput)}`, '_blank');
+                } else if (data && data.links && data.links[0]) {
+                    document.getElementById('downloadLink').href = data.links[0].url;
+                    resultDiv.style.display = "block";
+                } else {
+                    // Contingência secundária usando bypass universal via salvamento direto
+                    window.open(`https://ssstik.io{encodeURIComponent(urlInput)}`, '_blank');
                 }
 
             } catch (error) {
-                // Abre o link diretamente na aba se houver restrição de segurança local
-                window.open(`${BACKEND_URL}?url=${encodeURIComponent(urlInput)}`, '_blank');
+                // Se qualquer bloqueio de rede ocorrer, joga o usuário para o gateway funcional direto
+                window.open(`https://snaptik.app{encodeURIComponent(urlInput)}`, '_blank');
             } finally {
                 btn.disabled = false;
                 btn.innerText = "Analisar Vídeo";
