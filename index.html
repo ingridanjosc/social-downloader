@@ -113,10 +113,10 @@
 
     <div class="container">
         <h1>Social Downloader</h1>
-        <p>Baixe vídeos das redes sociais sem marca d'água gratuitamente</p>
+        <p>Baixe vídeos do TikTok sem marca d'água gratuitamente</p>
 
         <div class="input-group">
-            <input type="text" id="videoUrl" placeholder="Cole o link do vídeo aqui (TikTok, Instagram...)" required>
+            <input type="text" id="videoUrl" placeholder="Cole o link do TikTok aqui..." required>
             <button id="btnDownload" onclick="processVideo()">Analisar Vídeo</button>
         </div>
 
@@ -142,28 +142,20 @@
             resultDiv.style.display = "none";
 
             try {
-                // Utilizando uma API pública, gratuita e global de extração de mídias sociais
-                // Suporta TikTok, Instagram, Twitter, etc., sem precisar de backend próprio
-                const apiUrl = `https://corbpie.com{encodeURIComponent(urlInput)}`;
+                // Usando a API direta e gratuita do TikWM que não exige servidor próprio
+                const response = await fetch(`https://tikwm.com{encodeURIComponent(urlInput)}`);
+                const resData = await response.json();
                 
-                const response = await fetch(apiUrl);
-                const data = await response.json();
-                
-                // Se a API encontrar o vídeo limpo
-                if (data && data.url) {
-                    document.getElementById('downloadLink').href = data.url;
-                    resultDiv.style.display = "block";
-                } else if (data && data.links && data.links[0]) {
-                    document.getElementById('downloadLink').href = data.links[0].url;
+                if (resData && resData.data && resData.data.play) {
+                    // Pega o link do vídeo limpo direto da resposta
+                    document.getElementById('downloadLink').href = resData.data.play;
                     resultDiv.style.display = "block";
                 } else {
-                    // Contingência secundária usando bypass universal via salvamento direto
-                    window.open(`https://ssstik.io{encodeURIComponent(urlInput)}`, '_blank');
+                    alert("Não foi possível processar este link. Verifique se o vídeo é público.");
                 }
 
             } catch (error) {
-                // Se qualquer bloqueio de rede ocorrer, joga o usuário para o gateway funcional direto
-                window.open(`https://snaptik.app{encodeURIComponent(urlInput)}`, '_blank');
+                alert("Erro de conexão com o motor de busca. Tente novamente.");
             } finally {
                 btn.disabled = false;
                 btn.innerText = "Analisar Vídeo";
