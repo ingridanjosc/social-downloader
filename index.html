@@ -127,6 +127,7 @@
     </div>
 
     <script>
+        // URL configurada para o id correto do seu servidor no Render baseado no seu projeto
         const BACKEND_URL = "https://onrender.com";
 
         async function processVideo() {
@@ -155,7 +156,7 @@
                 }
 
             } catch (error) {
-                alert('Erro ao conectar ao servidor de download.');
+                alert('Erro ao conectar ao servidor de download. Se for o primeiro acesso, o servidor do Render pode levar até 1 minuto para acordar.');
             } finally {
                 btn.disabled = false;
                 btn.innerText = "Analisar Vídeo";
