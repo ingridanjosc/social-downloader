@@ -127,7 +127,6 @@
     </div>
 
     <script>
-        // BACKEND_URL será a URL do seu servidor no Render futuramente
         const BACKEND_URL = "https://onrender.com";
 
         async function processVideo() {
@@ -145,20 +144,15 @@
             resultDiv.style.display = "none";
 
             try {
-                // Código real que vai conectar ao backend na Fase 2
-                /*
                 const response = await fetch(`${BACKEND_URL}?url=${encodeURIComponent(urlInput)}`);
                 const data = await response.json();
-                if(data.success) {
+                
+                if (data.success) {
                     document.getElementById('downloadLink').href = data.downloadUrl;
                     resultDiv.style.display = "block";
-                } else { alert("Erro ao processar link."); }
-                */
-
-                // Simulação temporária para você ver o visual funcionando no GitHub:
-                await new Promise(resolve => setTimeout(resolve, 2000));
-                document.getElementById('downloadLink').href = urlInput; // Apenas simulação
-                resultDiv.style.display = "block";
+                } else { 
+                    alert("Erro ao processar link: " + (data.error || "Verifique a URL")); 
+                }
 
             } catch (error) {
                 alert('Erro ao conectar ao servidor de download.');
