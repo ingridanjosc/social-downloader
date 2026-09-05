@@ -127,7 +127,8 @@
     </div>
 
     <script>
-        const BACKEND_URL = "https://onrender.com";
+        // Configurado com o seu link real da Vercel
+        const BACKEND_URL = "https://vercel.app";
 
         async function processVideo() {
             const urlInput = document.getElementById('videoUrl').value;
@@ -143,30 +144,20 @@
             btn.innerText = "Processando vídeo...";
             resultDiv.style.display = "none";
 
-            // Nova abordagem: Se o fetch comum falhar por restrição do navegador, 
-            // usamos um redirecionamento limpo para contornar a segurança do GitHub Pages
             try {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 6000); // 6 segundos de tolerância
-
-                const response = await fetch(`${BACKEND_URL}?url=${encodeURIComponent(urlInput)}`, { 
-                    signal: timeoutId,
-                    mode: 'cors'
-                });
-                
+                const response = await fetch(`${BACKEND_URL}?url=${encodeURIComponent(urlInput)}`);
                 const data = await response.json();
                 
                 if (data.success) {
                     document.getElementById('downloadLink').href = data.downloadUrl;
                     resultDiv.style.display = "block";
                 } else { 
-                    // Se o motor quebrar por link inválido, avisa o usuário de forma limpa
-                    alert("O link enviado não pôde ser processado pelo servidor. Verifique se o vídeo é público."); 
+                    // Se a requisição direta falhar, tenta a estratégia de contingência abrindo uma nova aba
+                    window.open(`${BACKEND_URL}?url=${encodeURIComponent(urlInput)}`, '_blank');
                 }
 
             } catch (error) {
-                // Se o navegador bloquear o tráfego oculto, abrimos a rota em uma nova aba de forma direta
-                // Isso ignora completamente o bloqueio de CORS do GitHub Pages!
+                // Abre o link diretamente na aba se houver restrição de segurança local
                 window.open(`${BACKEND_URL}?url=${encodeURIComponent(urlInput)}`, '_blank');
             } finally {
                 btn.disabled = false;
