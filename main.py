@@ -1,10 +1,11 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 import yt_dlp
 
 app = FastAPI()
 
-# Configuração reforçada de CORS para liberar totalmente o acesso do seu site
+# Permissão total e explícita para qualquer site conectar
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -20,9 +21,8 @@ def read_root():
 @app.get("/download")
 def get_download_url(url: str):
     if not url:
-        raise HTTPException(status_code=400, detail="URL inválida")
+        return JSONResponse(status_code=400, content={"success": False, "error": "URL inválida"})
         
-    # Configurações otimizadas do yt-dlp
     ydl_opts = {
         'format': 'best',
         'quiet': True,
@@ -35,23 +35,21 @@ def get_download_url(url: str):
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=False)
-            
-            # Tenta pegar o link direto do vídeo
             video_url = info.get('url')
             
-            # Se for uma playlist ou múltiplos formatos, pega o primeiro item válido
             if not video_url and 'entries' in info:
                 video_url = info['entries'][0]['url']
                 
             if not video_url:
-                return {"success": False, "error": "Não foi possível extrair a URL direta do vídeo."}
+                return {"success": False, "error": "Não foi possível extrair o link direto."}
             
-            return {
+            # Retorna uma resposta HTTP explícita com cabeçalhos limpos
+            return JSONResponse(content={
                 "success": True,
                 "downloadUrl": video_url
-            }
+            })
     except Exception as e:
-        return {
+        return JSONResponse(content={
             "success": False,
             "error": str(e)
-        }
+        })
