@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://veloryn.pages.dev/sitemap.xml
+Sitemap: https://download.zuvoray.site/sitemap.xml
