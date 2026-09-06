@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://ingridanjosc.github.io/social-downloader/sitemap.xml
+Sitemap: https://veloryn.pages.dev/sitemap.xml
